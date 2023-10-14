@@ -8,11 +8,11 @@
     export let figure_layer;
 
     onMount(() => {
-        document.onpointermove = pointermove;
-        document.onpointerdown = pointerdown;
-        document.onpointerup = pointerup;
-        document.onpointerleave = pointerleave;
-        document.onblur = blur;
+        document.getElementById("main-canvas").onpointermove = pointermove;
+        document.getElementById("main-canvas").onpointerdown = pointerdown;
+        document.getElementById("main-canvas").onpointerup = pointerup;
+        document.getElementById("main-canvas").onpointerleave = pointerleave;
+        document.getElementById("main-canvas").onblur = blur;
     });
 
     function pointermove(e) {
@@ -30,6 +30,9 @@
             $pointer.pan_x += $pointer.delta_x;
             $pointer.pan_y += $pointer.delta_y;
         }
+
+        $pointer.world_x = $pointer.client_x - $pointer.pan_x;
+        $pointer.world_y = $pointer.client_y - $pointer.pan_y;
 
         figure_layer.pointermove(e);
 

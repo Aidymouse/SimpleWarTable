@@ -13,5 +13,8 @@ export let pointer = writable({
     last_client_y: 0,
 
     delta_x: 0,
-    delta_y: 0
+    delta_y: 0,
+
+    world_x: 0,
+    world_y: 0,
 })

@@ -44,7 +44,7 @@
 <main>
 
   
-  <div id="main-canvas">
+  <div id="main-canvas" on:pointerleave={() => {console.log("Okay")}}>
     
     <FigureLayer bind:this={figure_layer} bind:app bind:object_container bind:ui_graphics />
     

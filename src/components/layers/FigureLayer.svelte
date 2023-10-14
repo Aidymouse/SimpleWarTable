@@ -25,6 +25,9 @@
     let grabbed_selection = false;
     let hovering_selection = false;
 
+    let making_selection = false;
+    let selection_box = { x: -1, y: -1, w: 0, h: 0 }
+
     let creating_selection = false;
     
     let prospective_selected_figures = {};
@@ -87,6 +90,11 @@
         
         if (Object.keys(prospective_selected_figures).length == 0) {
             selected_figures = {};
+            
+            making_selection = true;
+            selection_box.x = $pointer.world_x;
+            selection_box.y = $pointer.world_y;
+
             update = !update;
         }
         
@@ -99,7 +107,16 @@
                 selected_figures[f_id].y += $pointer.delta_y;
             })
             update = !update;
+        
+        } else if (making_selection) {
+
+            selection_box.width = $pointer.world_x - selection_box.x;
+            selection_box.height = $pointer.world_y - selection_box.y;
+
+
         }
+
+
     }
     
     export function pointerup(e) {
@@ -111,6 +128,12 @@
         }
 
         grabbed_selection = false;
+        
+        making_selection = false;
+        selection_box.width = 0;
+        selection_box.height = 0;
+        selection_box.x = -1;
+        selection_box.y = -1;
 
     }
     
@@ -158,9 +181,6 @@
 
                 sprite_container.addChild(new_sprite);
                 console.log(`Added ${figure.id}`);
-                console.log(sprite_container.children.length);
-                console.log(sprite_container.children);
-
             }
 
             figure_sprites[figure.id].x = figure.x;
@@ -194,11 +214,27 @@
         selected_ids.forEach(figure_id => {
             let fs = figure_sprites[figure_id]
             ui_graphics.drawRect(fs.x-5, fs.y-5, fs.width+10, fs.height+10);
-
+            
         })
-
+        
         if (selected_ids.length > 1) {
             // Draw a big box around all of them
+        }
+
+        if (making_selection) {
+
+            let box_x = Math.min(selection_box.x, selection_box.x + selection_box.width);
+            let box_y = Math.min(selection_box.y, selection_box.y + selection_box.height);
+
+            let box_width = Math.abs(selection_box.width);
+            let box_height = Math.abs(selection_box.height);
+            
+            ui_graphics.lineStyle(1, 0x888888);
+            ui_graphics.beginFill(0x888888, 0.5);
+            ui_graphics.drawRect(box_x, box_y, box_width, box_height);
+            ui_graphics.endFill();
+
+
         }
 
         // Remove figures that don't exist anymore
