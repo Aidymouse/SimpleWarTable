@@ -8,15 +8,30 @@
     export let figure_layer;
 
     onMount(() => {
-        document.getElementById("main-canvas").onpointermove = pointermove;
-        document.getElementById("main-canvas").onpointerdown = pointerdown;
-        document.getElementById("main-canvas").onpointerup = pointerup;
-        document.getElementById("main-canvas").onpointerleave = pointerleave;
-        document.getElementById("main-canvas").onblur = blur;
+        document.getElementById("main-canvas").onpointermove = canvas_pointermove;
+        document.getElementById("main-canvas").onpointerdown = canvas_pointerdown;
+        document.getElementById("main-canvas").onpointerup = canvas_pointerup;
+        document.getElementById("main-canvas").onpointerleave = canvas_pointerleave;
+        
+        document.onpointerdown = document_pointerdown
+        document.onpointerup = document_pointerup
+        document.onpointermove = document_pointermove;
+        document.onpointerleave = document_pointerleave
+        document.onblur = document_blur;
     });
 
-    function pointermove(e) {
 
+    function document_pointerleave(e) {
+        
+        $pointer.panning = false;
+
+    }
+
+    function document_blur(e) {
+        $pointer.panning = false;
+    }
+
+    function document_pointermove(e) {
         $pointer.client_x = e.clientX;
         $pointer.client_y = e.clientY;
 
@@ -33,40 +48,52 @@
 
         $pointer.world_x = $pointer.client_x - $pointer.pan_x;
         $pointer.world_y = $pointer.client_y - $pointer.pan_y;
+    }
+
+    function document_pointerdown(e) {
+
+        if (e.button == 1) {
+            e.preventDefault();
+            $pointer.panning = true;
+        }
+
+    }
+
+    function document_pointerup(e) {
+        if (e.button == 1) { // Middle mouse button
+            e.preventDefault();
+            $pointer.panning = false;
+        }
+        $floating_object.obj = null;
+    }
+
+
+
+    // Canvas
+    function canvas_pointermove(e) {
+
 
         figure_layer.pointermove(e);
 
     }
     
-    function pointerdown(e) {
+    function canvas_pointerdown(e) {
         
-        if (e.button == 1) {
-            e.preventDefault();
-            $pointer.panning = true;
-        }
 
         figure_layer.pointerdown(e);
     
     }
 
 
-    function pointerup(e) {
-        if (e.button == 1) { // Middle mouse button
-            e.preventDefault();
-            $pointer.panning = false;
-        }
+    function canvas_pointerup(e) {
+        
 
         figure_layer.pointerup(e);
 
-        $floating_object.obj = null;
     }
 
-    function pointerleave(e) {
-        $pointer.panning = false;
+    function canvas_pointerleave(e) {
     }
 
-    function blur(e) {
-        $pointer.panning = false;
-    }
-
+    
 </script>
