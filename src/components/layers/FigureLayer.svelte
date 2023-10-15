@@ -150,6 +150,8 @@
 
     })
 
+    let selection_border_margin = 5;
+
     afterUpdate(() => {
 
         Object.keys(figure_sprites).forEach(figure_sprite_id => {
@@ -219,6 +221,25 @@
         
         if (selected_ids.length > 1) {
             // Draw a big box around all of them
+            
+            let left_most_x = Infinity;
+            let right_most_x = -Infinity;
+            let top_most_y = Infinity;
+            let bottom_most_y = -Infinity;
+            
+            selected_ids.forEach(s_id => {
+                left_most_x = Math.min(figure_sprites[s_id].x, left_most_x);
+                right_most_x = Math.max(figure_sprites[s_id].x + figure_sprites[s_id].width, right_most_x);
+
+                top_most_y = Math.min(figure_sprites[s_id].y, top_most_y);
+                bottom_most_y = Math.max(figure_sprites[s_id].y + figure_sprites[s_id].height, bottom_most_y);
+            });
+
+            console.log(left_most_x, right_most_x);
+            
+            ui_graphics.lineStyle(1, 0xffffff);
+            ui_graphics.drawRect(left_most_x-5, top_most_y-5, right_most_x-left_most_x+10, bottom_most_y-top_most_y+10);
+
         }
 
         if (making_selection) {
