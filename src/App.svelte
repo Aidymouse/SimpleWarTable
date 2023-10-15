@@ -1,7 +1,7 @@
 <script>
   import { afterUpdate, onMount } from "svelte";
 
-  import FigureLayer from "./components/layers/FigureLayer.svelte";
+  import FigureLayer from "./components/Battlefield.svelte";
   import Trays from "./components/Trays.svelte";
   import Grid from "./components/Grid.svelte";
   import FloatingObject from "./components/FloatingObject.svelte";
