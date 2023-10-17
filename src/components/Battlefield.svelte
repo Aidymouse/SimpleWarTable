@@ -1,17 +1,22 @@
 <script>
 
-    import { afterUpdate, onMount, tick } from "svelte";
+    import { beforeUpdate, afterUpdate, onMount, tick } from "svelte";
 
     import { pointer } from "../stores/pointer";
     import { floating_object } from "../stores/floating_object";
     import { map } from "../stores/map";
     import { keys } from "../stores/keys";
 
+    import MeasuringLine from "./MeasuringLine.svelte";
+
     import * as PIXI from 'pixi.js';
 
     export let app;
     export let object_container;
     export let ui_graphics;
+
+    let measure_graphics = new PIXI.Graphics();
+    object_container.addChild(measure_graphics);
 
     let objects = [];
 
@@ -27,6 +32,9 @@
 
     let making_selection = false;
     let selection_box = { x: -1, y: -1, w: 0, h: 0 }
+
+    let currently_measuring = false;
+    let measuring_line = { points: [] }
 
     let creating_selection = false;
     
@@ -99,6 +107,13 @@
 
     export function pointerdown(e) {
         
+        if (e.button == 0) pointerdown_leftmouse();
+        if (e.button == 2) pointerdown_rightmouse();
+        
+    }
+
+    function pointerdown_leftmouse(e) {
+
         if (Object.keys(prospective_selected_objects).length == 0) {
             if (!$keys.down["Shift"]) {
                 selected_objects = {};
@@ -110,7 +125,23 @@
 
             update = !update;
         }
+
+    }
+
+    function pointerdown_rightmouse(e) {
+
+        console.log("Right Mouse");
+
+        currently_measuring = true;
         
+        measuring_line.points = [
+            $pointer.world_x,
+            $pointer.world_y,
+            $pointer.world_x,
+            $pointer.world_y
+        ];
+
+
     }
 
     export function pointermove(e) {
@@ -126,6 +157,14 @@
             selection_box.width = $pointer.world_x - selection_box.x;
             selection_box.height = $pointer.world_y - selection_box.y;
             
+        }
+
+        if (currently_measuring) {
+
+            measuring_line.points[measuring_line.points.length-2] = $pointer.world_x
+            measuring_line.points[measuring_line.points.length-1] = $pointer.world_y
+
+            measuring_line.points = measuring_line.points;
         }
         
         
@@ -153,10 +192,19 @@
         selection_box.height = 0;
         selection_box.x = -1;
         selection_box.y = -1;
+
+        currently_measuring = true;
+        measuring_line.points = [];
         
         update = !update;
     }
+
+
     
+    export function pointerleave(e) {
+        making_selection = false;
+        prospective_selected_objects = {};
+    }
 
     function get_bounding_box(object_sprite, margin) {
         return {
@@ -327,3 +375,7 @@
 </script>
 
 <div class="layer-activator">{update}</div>
+
+{#if currently_measuring}
+    <MeasuringLine bind:graphics={measure_graphics} bind:points={measuring_line.points} />
+{/if}

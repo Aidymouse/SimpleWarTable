@@ -93,6 +93,8 @@
     }
 
     function canvas_pointerleave(e) {
+
+        figure_layer.pointerleave(e)
     }
 
     
