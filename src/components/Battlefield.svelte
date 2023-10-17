@@ -14,9 +14,10 @@
     export let app;
     export let object_container;
     export let ui_graphics;
+    export let ui_container;
 
     let measure_graphics = new PIXI.Graphics();
-    object_container.addChild(measure_graphics);
+    ui_container.addChild(measure_graphics);
 
     let objects = [];
 
@@ -137,8 +138,8 @@
         measuring_line.points = [
             $pointer.world_x,
             $pointer.world_y,
-            $pointer.world_x,
-            $pointer.world_y
+            NaN,
+            NaN
         ];
 
 
@@ -193,8 +194,10 @@
         selection_box.x = -1;
         selection_box.y = -1;
 
-        currently_measuring = true;
-        measuring_line.points = [];
+        currently_measuring = false;
+        //measuring_line.points = [];
+
+
         
         update = !update;
     }
@@ -204,6 +207,13 @@
     export function pointerleave(e) {
         making_selection = false;
         prospective_selected_objects = {};
+    }
+
+    export function contextmenu(e) {
+        if (!isNaN(measuring_line.points[measuring_line.points.length-1])) {
+            return false;
+        }
+        return true;
     }
 
     function get_bounding_box(object_sprite, margin) {

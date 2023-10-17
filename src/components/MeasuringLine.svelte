@@ -1,5 +1,6 @@
 <script>
-    import { afterUpdate, onMount } from "svelte";
+    import { afterUpdate, onDestroy, onMount } from "svelte";
+
 
     import * as PIXI from 'pixi.js';
 
@@ -18,20 +19,21 @@
 
     onMount(() => {
         
-        graphics.lineStyle(5, 0x000000);
+        graphics.lineStyle(line_style.width, line_style.color);
         drawLine(graphics, points[0], points[1], points[2], points[3]);
         
     })
     
     afterUpdate(() => {
-
+        
         graphics.clear();
-
-        console.log(line_style);
-
-        graphics.lineStyle(5, 0x000000);
+        graphics.lineStyle(line_style.width, line_style.color);
         drawLine(graphics, points[0], points[1], points[2], points[3]);
         
+    })
+
+    onDestroy(() => {
+        graphics.clear();
     })
     
     

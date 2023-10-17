@@ -12,6 +12,7 @@
         document.getElementById("main-canvas").onpointerdown = canvas_pointerdown;
         document.getElementById("main-canvas").onpointerup = canvas_pointerup;
         document.getElementById("main-canvas").onpointerleave = canvas_pointerleave;
+        document.getElementById("main-canvas").oncontextmenu = canvas_contextmenu;
         
         document.onpointerdown = document_pointerdown
         document.onpointerup = document_pointerup
@@ -95,6 +96,10 @@
     function canvas_pointerleave(e) {
 
         figure_layer.pointerleave(e)
+    }
+
+    function canvas_contextmenu(e) {
+        if (!figure_layer.contextmenu(e)) return false;
     }
 
     

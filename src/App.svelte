@@ -33,8 +33,11 @@
   let object_container = new PIXI.Container();
   offset_container.addChild(object_container);
   
+  let ui_container = new PIXI.Container();
+  global_container.addChild(ui_container);
+
   let ui_graphics = new PIXI.Graphics();
-  offset_container.addChild(ui_graphics);
+  ui_container.addChild(ui_graphics);
 
   let figure_layer;
 
@@ -64,7 +67,7 @@
   
     <TilingBackground image={"src/assets/green_felt_stolen.jpg"} bind:window_width bind:window_height bind:background_container />
 
-    <FigureLayer bind:this={figure_layer} bind:app bind:object_container bind:ui_graphics />
+    <FigureLayer bind:this={figure_layer} bind:app bind:object_container bind:ui_graphics bind:ui_container />
     
   </div>
   
